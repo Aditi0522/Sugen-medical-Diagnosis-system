@@ -6,6 +6,15 @@ services:
       - ANTHROPIC_API_KEY
       - HTTPS_PROXY
       - https_proxy
+      - NO_PROXY
+      - no_proxy
+      - OPENAI_BASE_URL
+      - OPENAI_MODEL
+      - ANTHROPIC_BASE_URL
+      - ANTHROPIC_MODEL
+      - LLM_PROVIDER
+      - WORKERS
+      - TIME_BUDGET_S
     volumes:
       - ./in:/in
       - ./out:/out

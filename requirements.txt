@@ -1,2 +1,5 @@
-openai>=1.40
-anthropic>=0.34
+anthropic==2.6.0
+openai==3.46.0
+python-dotenv==1.2.4
+rank-bm25==0.2.2
+

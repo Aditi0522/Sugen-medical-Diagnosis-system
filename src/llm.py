@@ -1,9 +1,14 @@
 import json, os, re, threading, time
 
+for _v in ("OPENAI_BASE_URL", "ANTHROPIC_BASE_URL", "OPENAI_MODEL", "ANTHROPIC_MODEL",
+           "OPENAI_REASONING_EFFORT", "LLM_PROVIDER"):
+    if os.environ.get(_v) == "":
+        del os.environ[_v]
+
 _lock = threading.Lock()
 _clients = {}
-_dead = set()        # providers switched off for this run (no credits, bad key, unknown model)
-_NO_TEMP = set()     # "provider:model" pairs that rejected the temperature argument
+_dead = set()
+_NO_TEMP = set()
 
 USAGE = {"in": 0, "out": 0, "calls": 0, "rate_waits": 0}
 
@@ -14,8 +19,6 @@ def _note_usage(i, o):
         USAGE["out"] += o or 0
         USAGE["calls"] += 1
 
-# Error texts that mean "retrying this provider is pointless": stop using it, fall back.
-# NOTE: "billing" is deliberately absent: rate-limit messages link to a billing page.
 _STOP = ("insufficient_quota", "no credits", "credit balance", "exceeded your current quota",
          "invalid x-api-key", "invalid_api_key", "invalid api key", "incorrect api key",
          "authentication", "permission", "not_found_error", "model_not_found",
