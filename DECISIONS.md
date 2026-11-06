@@ -61,7 +61,7 @@ Evidence: In the error results, I noticed that many misses were because the mode
 Revisit: will do a comparison on another set of notes and maybe check if prompt needs further verification
 
 ## D-07 2026-11-06 8:22 IST
-Commit: <auto>
+Commit: e9f18ee
 Decision: Added a dedicated note parsing module because assessment_text() function was relying heavily on regex based approach which wasn't ideal. Appropriately handles all three types of notes and their normalization.
 Options: Leave the regex Option, LLM pre-pass to clean and segment notes; ASCII-fold everything for BM25.
 Evidence:
@@ -83,7 +83,7 @@ Span examples (output of `assessment_span` on dev notes, printed truncated to ab
 Revisit: not needed imo but will check if something breaks
 
 ## D-08 2026-11-06 8:22 IST
-Commit: <auto>
+Commit: e9f18ee
 Decision:Ship Phase 2 note parsing together with Prompt V2 as the default pipeline. Parsing extracts diagnosis-bearing spans, expands abbreviations in retrieval queries and applies NFC normalization. V2 makes rerank more conservative about code specificity.
 Option: Add an LLM pre-pass to clean notes.
 Evidence: Previously, BM25 retrieval could find a relevant ICD category but miss its sibling categories, prompt v2 improved candidate selection as we made re rank more conservative abt specificity along with note normalisation which helped in scoring also. Earlier our predictions scored 67/75 max, these new changes have increased the score to 70.8 (with original prompt only) and 72.5(using prompt v2) which account for something.
