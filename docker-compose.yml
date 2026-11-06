@@ -5,6 +5,7 @@ services:
       - OPENAI_API_KEY
       - ANTHROPIC_API_KEY
       - HTTPS_PROXY
+      - https_proxy
     volumes:
       - ./in:/in
       - ./out:/out
