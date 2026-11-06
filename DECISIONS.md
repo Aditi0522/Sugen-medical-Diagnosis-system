@@ -60,3 +60,31 @@ Options:
 Evidence: In the error results, I noticed that many misses were because the model picked a more specific code using undocumented info when the gold code was (.z), forcing .z specifically is not a solution because most notes require specific solution.
 Revisit: will do a comparison on another set of notes and maybe check if prompt needs further verification
 
+## D-07 2026-11-06 8:22 IST
+Commit: <auto>
+Decision: Added a dedicated note parsing module because assessment_text() function was relying heavily on regex based approach which wasn't ideal. Appropriately handles all three types of notes and their normalization.
+Options: Leave the regex Option, LLM pre-pass to clean and segment notes; ASCII-fold everything for BM25.
+Evidence:
+
+Span examples (output of `assessment_span` on dev notes, printed truncated to about 100 characters):
+
+| Style | Note | Extracted span |
+|---|---|---|
+| typed_consult | dev-001 | Uncomplicated falciparum malaria. |
+| typed_consult | dev-004 | Enteric fever - typhoid, culture confirmed. Previous "malaria" was likely misdiagnosis. |
+| typed_consult | dev-007 | Community-acquired pneumonia, R lower zone. |
+| short_consult | dev-002 | Dx viral URTI, malaria excluded. |
+| short_consult | dev-005 | Dx vaginal thrush. |
+| short_consult | dev-008 | Dx jiggers. |
+| ambient_transcript | dev-003 | Your saturation is ninety-four percent, you're speaking in full sentences, and I can hear wheeze on both sides. Peak flow is about sixty per... |
+| ambient_transcript | dev-006 | I can see spots at different stages, some red bumps, some blisters, some crusting. The chest is clear, she's alert and none look infected. T... |
+| ambient_transcript | dev-010 | It's acute tonsillitis. We don't have the rapid strep test here, so I'll treat it with amoxicillin syrup for ten days, plus Panadol for the... |
+
+Revisit: not needed imo but will check if something breaks
+
+## D-08 2026-11-06 8:22 IST
+Commit: <auto>
+Decision:Ship Phase 2 note parsing together with Prompt V2 as the default pipeline. Parsing extracts diagnosis-bearing spans, expands abbreviations in retrieval queries and applies NFC normalization. V2 makes rerank more conservative about code specificity.
+Option: Add an LLM pre-pass to clean notes.
+Evidence: Previously, BM25 retrieval could find a relevant ICD category but miss its sibling categories, prompt v2 improved candidate selection as we made re rank more conservative abt specificity along with note normalisation which helped in scoring also. Earlier our predictions scored 67/75 max, these new changes have increased the score to 70.8 (with original prompt only) and 72.5(using prompt v2) which account for something.
+Revisit: Check if this works for openai or anthropic models
