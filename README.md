@@ -1,8 +1,23 @@
 # ICD-11 consult-note coder
 
 Maps a clinical consult note (typed, short, or ambient transcript; any language) to up to 3 ICD-11 MMS codes.
-Run: `docker compose run coder /in/notes.jsonl /out/predictions.jsonl`
 
+## Setup
+
+Create a `.env` file in the project root:
+
+```bash
+cp .env.example .env
+```
+
+Add your API credentials and configuration to `.env`. The LLM providers are optional; without valid API credentials, the system uses its retrieval-only fallback.
+
+Then run:
+
+```bash
+docker compose run coder /in/notes.jsonl /out/predictions.jsonl
+
+```
 ## Approach
 1. **Reader (LLM):** reads the note and writes the concluded diagnoses as English terms (ruled-out and past conditions ignored).
 2. **Retrieval:** BM25 over the 15,912 leaf codes (title plus WHO synonyms, inclusions and short definition), several queries fused, then the siblings of the best hits added (`.Z` and `.Y` included), grouped by parent.
