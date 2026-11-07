@@ -11,7 +11,7 @@ from retrieve import KB
 from llm import llm_json, have_key, USAGE
 from notes import parse, expand_abbrev, hints
 
-BUDGET_S = int(os.getenv("TIME_BUDGET_S", "3300"))     # stop starting LLM work at 45 min; hard cap is 60
+BUDGET_S = int(os.getenv("TIME_BUDGET_S", "3300"))     # stop starting LLM work at 55 min; hard cap is 60
 WORKERS = int(os.getenv("WORKERS", "3"))
 PROMPT_V = os.getenv("PROMPT_V", "2")
 USE_HINTS = os.getenv("USE_HINTS") == "1"               # add cue hints (ruled out / uncertain / history)
